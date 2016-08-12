@@ -1,0 +1,52 @@
+public class Solution {
+    public int threeSumClosest(int[] nums, int target) {
+        //similar to 3sum, we first sort nums array and then block 1 num,and check other two.
+        //Assumption:1)each input nums has no less than 3 elements->currSum;
+        //worse case : ~o(n2)
+        
+        sort(nums,0,nums.length-1);
+        int currSum = nums[0]+nums[1]+nums[2];//nums should have more than 3 elements.
+        for(int i=0;i<nums.length-2;i++){
+            int p1 = i+1,p2 = nums.length-1;
+            //???attention
+            while(p1<p2){
+                int sum = nums[i]+nums[p1]+nums[p2];
+                if(sum==target){
+                    return sum;
+                }else if(sum<target&&p1<p2){
+                    p1++;
+                }else if(p1<p2){//&&sum>target
+                    p2--;
+                }
+                //compare sum to current sum
+                if(Math.abs(sum-target)<Math.abs(currSum-target)) currSum = sum;
+            }
+            
+        }
+        return currSum;
+    }
+    //3-way quick sort
+    public void sort(int[] a,int lo,int hi){
+        if(hi<=lo) return;
+        int lt = lo, gt = hi;
+        int v = a[lo];
+        int i = lo;
+        while(i<=gt){
+            if(a[i]<v){
+                int temp = a[i];
+                a[i] = a[lt];
+                a[lt] = temp;
+                lt++;i++;
+            }else if(a[i]>v){
+                int temp = a[i];
+                a[i] = a[gt];
+                a[gt] = temp;
+                gt--;
+            }else{
+                i++;
+            }
+        }
+        sort(a,lo,lt-1);
+        sort(a,gt+1,hi);
+    }
+}
