@@ -1,0 +1,72 @@
+public class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        //Process:block one number , use two pointer from left and right end individually to find all set including this num
+        //check repeated value for two pointer in order to prevent repeated value in set
+        //don't initialize new instance for currList, so the memory limited is OK
+        //WHY SORT? when nums is sorted, two pointer could be used from left and right end and decrease repeating check significantly
+        
+        //??each time initialize currList might cause time overweight, considering the constance number of obj in set, it's OK
+        
+        List<List<Integer>> set = new ArrayList<List<Integer>>();
+        ArrayList<Integer> currList;
+        quickSort(nums,0,nums.length-1);//sort nums in non-descending order
+        //block one number , use two pointer from left and right end individually to find all set including this
+        for(int i=0;i<nums.length-1;i++){
+            if(i>0&&nums[i]==nums[i-1]) continue;//ignore repeated num
+            int p1 = i+1,p2 = nums.length-1;
+            while(p1<p2){
+                if(nums[i]+nums[p1]+nums[p2]==0){
+                    currList = new ArrayList<Integer>();
+                    currList.add(nums[i]);
+                    currList.add(nums[p1]);
+                    currList.add(nums[p2]);
+                    set.add(currList);
+                    p1++;
+                    while(p1<p2&&nums[p1]==nums[p1-1]){
+                        p1++;
+                    }
+                    p2--;
+                    while(p1<p2&&nums[p2]==nums[p2+1]){
+                        p2--;
+                    }
+                }else if(nums[i]+nums[p1]+nums[p2]<0){
+                    p1++;
+                    while(p1<p2&&nums[p1]==nums[p1-1]){
+                        p1++;
+                    }
+                }else{
+                    p2--;
+                    while(p1<p2&&nums[p2]==nums[p2+1]){
+                        p2--;
+                    }
+                }
+            }
+        }
+        return set;
+    }
+    
+    //sort given array by 3-way quick sort
+    public void quickSort(int[] a,int lo,int hi){
+        if(hi<=lo) return;
+        int lt = lo, gt = hi;
+        int v = a[lo];
+        int i = lo;
+        while(i<=gt){
+            if(a[i]<v){
+                int temp = a[i];
+                a[i] = a[lt];
+                a[lt] = temp;
+                i++;lt++;
+            }else if(a[i]>v){
+                int temp = a[i];
+                a[i] = a[gt];
+                a[gt] = temp;
+                gt--;
+            }else{
+                i++;
+            }
+        }
+        quickSort(a,lo,lt-1);
+        quickSort(a,gt+1,hi);
+    }
+}
